@@ -1,2 +1,2 @@
 # CocukAsistan-Web
-🤖💻 Çocuk Asistan projesinin mobil kısmı 
+🤖💻 Çocuk Asistan projesinin web kısmı 
