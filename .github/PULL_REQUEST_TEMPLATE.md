@@ -8,3 +8,6 @@
 
 ## 📝 Ek Notlar
 -
+
+<!-- faydalı bağlantılar varsa -->
+## 🔗 Faydalı Bağlantılar
