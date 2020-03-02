@@ -1,14 +1,10 @@
 const express = require('express');
+const routeManager = require('./config/routeManager');
 
 const app = express();
 
 
-app.get('/', (req,res)=>{
-    res.write("<h1> Your APP! </h1>");
-    res.end();
-
-    require('./model/select');
-});
+app.use('/', routeManager);
 
 
 app.listen(8080, ()=>{
