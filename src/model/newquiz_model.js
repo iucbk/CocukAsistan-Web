@@ -1,1 +1,3 @@
-const conn = require('../config/init');
+const conn = require('../config/db');
+
+// code

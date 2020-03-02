@@ -2,33 +2,33 @@ const router = require('express').Router();
 
 
 router.get('/example', async (req,res)=>{
-    let example = require('../controller/example_ctrl');
+    let example = require('../controller/example_cont');
 
     example.render(req,res);
 });
 
 
 router.get('/register', (req,res)=>{
-    res.write("<h1>Register</h1>");
-    res.end();
+    
+    // code
 });
 
 
 router.get('/login', (req,res)=>{
-    res.write("<h1>Login</h1>");
-    res.end();
+    
+    // code
 });
 
 
 router.get('/newquiz', (req,res)=>{
-    res.write("<h1>New Quiz</h1>");
-    res.end();
+    
+    // code
 });
 
 
 router.get('/finishedquizzes', (req,res)=>{
-    res.write("<h1>Finished Quizzes</h1>");
-    res.end();
+    
+    // code
 });
 
 
