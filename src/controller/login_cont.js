@@ -1,9 +1,18 @@
-class login_cont{
+const loginModel = require("../model/login_model");
 
-    // code
-}
+exports.login = async (req, res) => {
+  let data = await loginModel(req.body);
 
-let login = new login_cont;
-
-module.exports = login;
-
+  if (data[0].count == 1) {
+    res.status(200).json({
+      code: 200,
+      message: "Logged in successfully"
+    });
+  } else {
+    console.log(data);
+    res.status(200).json({
+      code: 422,
+      message: "Incorrect email or password"
+    });
+  }
+};
