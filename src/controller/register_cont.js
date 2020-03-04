@@ -1,8 +1,9 @@
-class register_cont{
+const registerModel = require('../model/register_model');
 
-    // code
-}
+exports.register = async (req,res) => {
+    
+    let data = await registerModel(req.body);
+    data.code = res.statusCode;
 
-let register = new register_cont;
-
-module.exports = register;
+    res.status(200).json(data);
+};

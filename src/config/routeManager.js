@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const registerController = require('../controller/register_cont');
 
 
 router.get('/example', async (req,res)=>{
@@ -8,10 +9,7 @@ router.get('/example', async (req,res)=>{
 });
 
 
-router.get('/register', (req,res)=>{
-    
-    // code
-});
+router.post('/register', registerController.register);
 
 
 router.get('/login', (req,res)=>{
