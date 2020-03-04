@@ -9,7 +9,7 @@ exports.login = async (req, res) => {
   if (data.length == 1) {
     jwt.sign({ id: data[0].user_id }, PRIVATE_KEY, function(err, token) {
       if (err) throw err;
-      res.status(200).json(resFun.success(200, "Logged in successfully", token));
+      res.status(200).json(resFun.success(200, "Logged in successfully", {token: token}));
     });
   } else {
     console.log(data);
