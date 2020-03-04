@@ -1,9 +1,9 @@
 const loginModel = require("../model/login_model");
+var jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
   let data = await loginModel(req.body);
-
-  if (data[0].count == 1) {
+  if (data.length == 1) {
     res.status(200).json({
       code: 200,
       message: "Logged in successfully"
