@@ -10,7 +10,7 @@ module.exports = {
   fail: function(code, message) {
     let res = {
       code: code,
-      message: message,
+      message: message
     };
     return res;
   }
