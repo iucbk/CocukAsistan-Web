@@ -25,6 +25,6 @@ router.get("/finishedquizzes", (req, res) => {
   // code
 });
 
-router.post("/quiz/getById", quizById.quizById);
+router.get("/quiz/getById", quizById.quizById);
 
 module.exports = router;
