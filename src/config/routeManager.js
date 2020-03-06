@@ -16,9 +16,9 @@ router.get('/register', (req, res) => {
 });
 
 
-router.post('/login', loginController.login);
+router.post('/user/login', loginController.login);
 
-router.get('/getQuizCategories', quizCategories.quizCategories);
+router.get('/quiz/getCategories', quizCategories.quizCategories);
 
 
 router.get('/newquiz', (req, res) => {
