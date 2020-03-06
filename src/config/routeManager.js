@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const loginController = require("../controller/login_cont");
 const quizCategories = require("../controller/quiz_categories_cont");
-const verifyAuth = require("../middleware/verify_auth");
-const mysql = require("mysql");
+const quizById = require("../controller/quiz_by_id_cont");
 
 router.get("/example", async (req, res) => {
   let example = require("../controller/example_cont");
@@ -26,31 +25,6 @@ router.get("/finishedquizzes", (req, res) => {
   // code
 });
 
-router.post("/quizes", verifyAuth, async (req, res) => {
-  //connection yarat
-  const connection = mysql.createConnection({
-    host: "cocukasistanmysql.mysql.database.azure.com",
-    user: "asistan@cocukasistanmysql",
-    password: "iucbkCocuk2020",
-    database: "cocukasistan",
-    port: 3306
-  });
-  //req.body.quiz_id yi kullanarak databasede arama yap
-  const q =
-    "SELECT quiz.quiz_id, quiz_title, question_id, question_content FROM cocukasistan.quiz INNER JOIN cocukasistan.question ON quiz.quiz_id = question.quiz_id WHERE quiz.quiz_id= ? ;";
-  try {
-    connection.query(q, [req.body.quiz_id], (error, results) => {
-      if (error) {
-        res.status(400).json({ err: error });
-      } else {
-        //Response olarak databaseden quizi gönder.
-        res.status(200).json({ results: results });
-      }
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ err: err });
-  }
-});
+router.post("/quiz/getById", quizById.quizById);
 
 module.exports = router;
