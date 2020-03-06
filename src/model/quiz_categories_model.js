@@ -3,7 +3,7 @@ const conn = require("../config/db");
 function getQuizCategories() {
   return new Promise(resolve => {
     let query =
-      "SELECT * FROM cocukasistan.quizcategory;";
+      "SELECT quiz_category_id AS id, quiz_category_name AS name FROM cocukasistan.quizcategory;";
     conn.query(query, (err, results, fields) => {
       if (err) throw err;
       resolve(results);
