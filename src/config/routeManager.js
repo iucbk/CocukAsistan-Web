@@ -43,7 +43,7 @@ router.post('/quizes', verifyAuth,  async (req, res)=>{
         port: 3306
     });
     //req.body.quiz_id yi kullanarak databasede arama yap
-    const q = "SELECT * FROM Quiz WHERE quiz_id='";
+    const q = "SELECT * FROM Quiz JOIN Question ON Quiz.id = Question.quiz_id WHERE quiz_id='";
     try{
         connection.query(q+req.body.quiz_id+"';", (error, results)=>{
             if(error){
