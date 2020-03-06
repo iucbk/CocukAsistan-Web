@@ -1,17 +1,17 @@
 const conn = require('../config/db');
 
 
-function registerUser(body){
+function registerUser(body, hash){
     
     return new Promise(resolve => {
         let query = "INSERT INTO user (email, full_name, password) VALUES (?,?,?)";
 
-        conn.query(query, [body.email, body.full_name, body.password], (err) => {
-                let message = 1;
+        conn.query(query, [body.email, body.full_name, hash], (err) => {
+                let insertErr = 0;
 
-                if (err) message = 0;
+                if (err) insertErr = 1;
                 
-                resolve(message);
+                resolve(insertErr);
             });
     
     });
