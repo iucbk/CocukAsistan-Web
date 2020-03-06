@@ -7,16 +7,11 @@ function registerUser(body){
         let query = "INSERT INTO user (email, full_name, password) VALUES (?,?,?)";
 
         conn.query(query, [body.email, body.full_name, body.password], (err) => {
-                let message = "";
-            
-                if (err){ message = "error";}
-                else message = "success";
+                let message = 1;
+
+                if (err) message = 0;
                 
-                resolve({
-                    code: null,
-                    message: message,
-                    data: null
-                });
+                resolve(message);
             });
     
     });
