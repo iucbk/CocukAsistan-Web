@@ -32,6 +32,6 @@ router.get('/finishedquizzes', (req, res) => {
     // code
 });
 
-router.get('/object', objectById.objectById);
+router.get('/object/getById', objectById.objectById);
 
 module.exports = router;
