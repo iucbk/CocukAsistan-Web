@@ -43,4 +43,3 @@ exports.register = async (req,res) => {
     else res.status(200).json(resFun.fail(503, "An error occured while inserting user"));
 
 };
-

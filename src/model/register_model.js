@@ -12,6 +12,7 @@ function registerUser(body, hash){
                 if (err) insertErr = 1;
                 
                 resolve(insertErr);
+
             });
     
     });
