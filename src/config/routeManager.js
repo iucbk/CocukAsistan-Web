@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const loginController = require('../controller/login_cont');
 const quizCategories = require('../controller/quiz_categories_cont');
+const quizById = require("../controller/quiz_by_id_cont");
 const objectById = require('../controller/object_by_id_cont');
 
 router.get('/example', async (req, res) => {
@@ -33,5 +34,7 @@ router.get('/finishedquizzes', (req, res) => {
 });
 
 router.get('/object/getById', objectById.objectById);
+
+router.get("/quiz/getById", quizById.quizById);
 
 module.exports = router;
