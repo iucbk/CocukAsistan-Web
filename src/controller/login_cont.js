@@ -54,7 +54,6 @@ exports.login = async (req, res) => {
                 res.status(200).json(resFun.success(200, "Logged in successfully", { token: token }));
             else
                 res.status(422).json(resFun.fail(422, "Incorrect email or password"));
-
         });
     } else {
         res.status(422).json(resFun.fail(422, "Incorrect email or password"));

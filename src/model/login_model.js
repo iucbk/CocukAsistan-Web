@@ -12,7 +12,6 @@ function login(body) {
           db_error: 1
         });
       }
-
       resolve(results);
     });
   });
