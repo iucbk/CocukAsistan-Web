@@ -11,3 +11,19 @@
 
 <!-- faydalı bağlantılar varsa -->
 ## 🔗 Faydalı Bağlantılar
+
+
+<!-- Yazdığınız servisleri raporlayın  
+     Durum başlığı: başarı durumu, server hatası, veritabanı hatası vs. gibi ufak açıklama olabilir -->
+## 📖 Servis Dokümanı
+- Durum başlığ1
+
+```
+örenk response
+```
+
+- Durum başlığı2
+
+```
+örenk response
+```
