@@ -19,6 +19,12 @@
 - **Route:** `URL/`
 <!--POST/GET-->
 - **METOD:**
+
+### 🚧 Request Anahtarları
+- anahtar1: required
+- anahtar2: optional
+
+### ⏮ Response'lar
 - Durum başlığı-1
 
 ```
