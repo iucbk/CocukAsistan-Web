@@ -16,7 +16,9 @@
 <!-- Yazdığınız servisleri raporlayın  
      Durum başlığı: başarı durumu, server hatası, veritabanı hatası vs. gibi ufak açıklama olabilir -->
 ## 📖 Servis Dokümanı
-**Route:** `URL/`
+- **Route:** `URL/`
+<!--POST/GET-->
+- **METOD:**
 - Durum başlığı-1
 
 ```
