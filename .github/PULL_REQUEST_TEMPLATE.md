@@ -16,6 +16,15 @@
 <!-- Yazdığınız servisleri raporlayın  
      Durum başlığı: başarı durumu, server hatası, veritabanı hatası vs. gibi ufak açıklama olabilir -->
 ## 📖 Servis Dokümanı
+- **Route:** `URL/`
+<!--POST/GET-->
+- **METOD:**
+
+### 🚧 Request Anahtarları
+- anahtar1: required
+- anahtar2: optional
+
+### ⏮ Response'lar
 - Durum başlığı-1
 
 ```
