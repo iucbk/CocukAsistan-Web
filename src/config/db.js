@@ -2,9 +2,9 @@ const mysql = require('mysql');
 
 const config =
 {
-    host: 'localhost',
-    user: 'root',
-    password: '',
+    host: 'cocukasistan.mysql.database.azure.com',
+    user: 'iucbk@cocukasistan',
+    password: 'CocukAsistan@2020',
     database: 'cocukasistan',
     port: 3306
 };
