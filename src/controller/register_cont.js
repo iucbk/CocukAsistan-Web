@@ -1,7 +1,61 @@
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
+const sgMail = require('@sendgrid/mail');
 const registerModel = require('../model/register_model');
 const resFun = require("../utils/response_functions");
 
+
+const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
+
+// Send Mail
+
+function sendMail(body, token){
+    return new Promise(resolve => {
+
+        sgMail.setApiKey('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');
+
+        const msg = {
+            to: body.email,
+            from: 'cocukasistan.iucbk@gmail.com',
+            subject: 'Çocuk Asistan Hesap Aktivasyonu',
+            text: 'Sayın ' + body.full_name + ', hesabınızı aktive edin.\n' + 
+                "http:localhost:8080/user/verify?confirmation=" + token
+        };
+    
+        sgMail.send(msg, (err, result) => {
+            if(err) 
+                resolve({send_error: 1});
+
+            resolve({send_error: 0});
+          
+        });
+    });
+}
+
+
+exports.mail = (req,res) => {
+    
+    let url = req.body.full_name + " / " + req.body.email + " / " + req.body.password; 
+
+    jwt.sign({ url: url }, PRIVATE_KEY, async (err, token) => {
+        if (err) {
+            res.status(500).json(resFun.fail(500, "An error occured while creating token"));
+        }
+            
+        let result = await sendMail(req.body, token);
+        
+        if(result.send_error)
+            res.status(500).json(resFun.fail(500, "An error occured while sending mail"));
+
+
+        res.status(200).json(resFun.success(200, "The mail was sent in successfully", null));
+    });
+
+}
+
+
+
+// Insert DB
 
 function hashPassword(password){
     return new Promise(resolve => {
@@ -23,14 +77,27 @@ function hashPassword(password){
 
 exports.register = async (req,res) => {
 
-    let hash_data = await hashPassword(req.body.password);
+    let full_name, email, password;
+
+    jwt.verify(req.query.confirmation, PRIVATE_KEY, (err, decoded) => {
+        if (err) {
+            res.status(422).json(resFun.fail(422, "Invalid token"));
+        } else {
+            let url = decoded.url.split(" / ");
+            full_name = url[0];
+            email = url[1];
+            password = url[2];
+        }
+    })
+
+    let hash_data = await hashPassword(password);
     let hash_error = hash_data.error;
     let hash = hash_data.hash;
 
     let insertErr;
 
     if(!hash_error) 
-        insertErr = await registerModel(req.body, hash);
+        insertErr = await registerModel(full_name, email, hash);
     else{
         res.status(500).json(resFun.fail(500, "An error occured while hashing password"));
         return;
@@ -43,3 +110,4 @@ exports.register = async (req,res) => {
     else res.status(200).json(resFun.fail(503, "An error occured while inserting user"));
 
 };
+

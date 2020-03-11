@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const resFun = require("../utils/response_functions");
 
 // TODO: bu parametrler ayrı bie config dosyasına aktarılmalı
-PUBLIC_ROUTES = ["/user/login", "/user/signup"];
+PUBLIC_ROUTES = ["/user/login", "/user/signup", "/user/verify"];
 PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY";
 
 function verifyAuth(req, res, next) {
