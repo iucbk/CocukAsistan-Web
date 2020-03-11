@@ -9,17 +9,17 @@ const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
 
 // Sending Verification Mail
 
-function sendMail(body, token){
+function sendMail(req, token){
     return new Promise(resolve => {
-
+        
         sgMail.setApiKey('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');
 
         const msg = {
-            to: body.email,
+            to: req.body.email,
             from: 'cocukasistan.iucbk@gmail.com',
             subject: 'Çocuk Asistan Hesap Aktivasyonu',
-            text: 'Sayın ' + body.full_name + ', hesabınızı aktive edin.\n' + 
-                "http:localhost:8080/user/verify?confirmation=" + token
+            text: 'Sayın ' + req.body.full_name + ', hesabınızı aktive edin.\n' + 
+                req.protocol + "://" + req.headers.host + "/user/verify?confirmation=" + token
         };
     
         sgMail.send(msg, (err, result) => {
@@ -55,7 +55,7 @@ exports.mail = async (req,res) => {
             res.status(500).json(resFun.fail(500, "An error occured while creating token"));
         }
             
-        let result = await sendMail(req.body, token);
+        let result = await sendMail(req, token);
         
         if(result.send_error)
             res.status(500).json(resFun.fail(500, "An error occured while sending mail"));
