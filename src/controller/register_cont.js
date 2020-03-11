@@ -7,7 +7,7 @@ const resFun = require("../utils/response_functions");
 
 const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
 
-// Send Mail
+// Sending Verification Mail
 
 function sendMail(body, token){
     return new Promise(resolve => {
@@ -33,8 +33,21 @@ function sendMail(body, token){
 }
 
 
-exports.mail = (req,res) => {
+exports.mail = async (req,res) => {
     
+    // Is there user in db?
+    let data = await registerModel.isThereUser(req.body.email);
+    if(data.selectErr){
+        res.status(503).json(resFun.fail(503, "Database error"));
+        return;
+    }else{
+        if(data.results.length != 0){
+            res.status(500).json(resFun.fail(500, "User is exist"));
+            return;
+        }
+    }
+
+    // Sending mail
     let url = req.body.full_name + " / " + req.body.email + " / " + req.body.password; 
 
     jwt.sign({ url: url }, PRIVATE_KEY, async (err, token) => {
@@ -55,7 +68,7 @@ exports.mail = (req,res) => {
 
 
 
-// Insert DB
+// Inserting User in DB
 
 function hashPassword(password){
     return new Promise(resolve => {
@@ -74,22 +87,41 @@ function hashPassword(password){
 }
 
 
-
 exports.register = async (req,res) => {
-
-    let full_name, email, password;
+    
+    // JWT
+    let full_name, email, password, jwtErr = 0;
 
     jwt.verify(req.query.confirmation, PRIVATE_KEY, (err, decoded) => {
-        if (err) {
-            res.status(422).json(resFun.fail(422, "Invalid token"));
-        } else {
+        if (err) jwtErr = 1;
+            
+        else {
             let url = decoded.url.split(" / ");
             full_name = url[0];
             email = url[1];
             password = url[2];
         }
-    })
+    });
 
+    if(jwtErr){
+        res.status(422).json(resFun.fail(422, "Invalid token"));
+        return;
+    }
+
+
+    // Is there user in db?
+    let data = await registerModel.isThereUser(email);
+    if(data.selectErr){
+        res.status(503).json(resFun.fail(503, "Database error"));
+        return;
+    }else{
+        if(data.results.length != 0){
+            res.status(500).json(resFun.fail(500, "User is exist"));
+            return;
+        }
+    }
+
+    // Hashing and registration
     let hash_data = await hashPassword(password);
     let hash_error = hash_data.error;
     let hash = hash_data.hash;
@@ -97,17 +129,15 @@ exports.register = async (req,res) => {
     let insertErr;
 
     if(!hash_error) 
-        insertErr = await registerModel(full_name, email, hash);
+        insertErr = await registerModel.register(full_name, email, hash);
     else{
         res.status(500).json(resFun.fail(500, "An error occured while hashing password"));
         return;
     }
-
     
-
     if(!insertErr) res.status(200).json(resFun.success(200, "Registered in successfully", null));
 
-    else res.status(200).json(resFun.fail(503, "An error occured while inserting user"));
+    else res.status(503).json(resFun.fail(503, "Database error"));
 
 };
 
