@@ -7,8 +7,11 @@ const quizById = require("../controller/quiz_by_id_cont");
 const objectById = require('../controller/object_by_id_cont');
 
 
+router.get("/favicon.ico", (req, res) => res.status(204).json({}));
+
 // user router
-router.post('/user/signup', registerController.register);
+router.post('/user/signup', registerController.mail);
+router.get('/user/verify', registerController.register);
 
 router.post("/user/login", loginController.login);
 
