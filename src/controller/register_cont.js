@@ -6,6 +6,7 @@ const resFun = require("../utils/response_functions");
 
 
 const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
+const SPLIT_KEY = "£z2H`)3FjvXJ(V£/8q!uAV.>l//dn6(";
 
 // Sending Verification Mail
 
@@ -48,7 +49,7 @@ exports.mail = async (req,res) => {
     }
 
     // Sending mail
-    let url = req.body.full_name + " / " + req.body.email + " / " + req.body.password; 
+    let url = req.body.full_name + SPLIT_KEY + req.body.email + SPLIT_KEY + req.body.password; 
 
     jwt.sign({ url: url }, PRIVATE_KEY, async (err, token) => {
         if (err) {
@@ -96,7 +97,7 @@ exports.register = async (req,res) => {
         if (err) jwtErr = 1;
             
         else {
-            let url = decoded.url.split(" / ");
+            let url = decoded.url.split(SPLIT_KEY);
             full_name = url[0];
             email = url[1];
             password = url[2];
