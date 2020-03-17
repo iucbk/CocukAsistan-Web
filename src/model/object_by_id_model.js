@@ -1,4 +1,4 @@
-const conn = require("../config/db");
+
 
 function getObjectById(id) {
   return new Promise(resolve => {

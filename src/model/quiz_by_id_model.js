@@ -1,4 +1,4 @@
-const conn = require("../config/db");
+
 
 function getQuizById(id) {
   return new Promise(resolve => {

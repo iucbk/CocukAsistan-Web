@@ -11,5 +11,5 @@ const config =
 
 const conn = new mysql.createConnection(config);
 
-
+  
 module.exports = conn;
