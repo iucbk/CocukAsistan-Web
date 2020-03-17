@@ -6,13 +6,15 @@ const resFun = require("../utils/response_functions");
 
 
 const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
+const SPLIT_KEY = "£z2H`)3FjvXJ(V£/8q!uAV.>l//dn6(";
+const MAIL_KEY = "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";
 
 // Sending Verification Mail
 
 function sendMail(req, token){
     return new Promise(resolve => {
         
-        sgMail.setApiKey('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');
+        sgMail.setApiKey(MAIL_KEY);
 
         const msg = {
             to: req.body.email,
@@ -48,7 +50,7 @@ exports.mail = async (req,res) => {
     }
 
     // Sending mail
-    let url = req.body.full_name + " / " + req.body.email + " / " + req.body.password; 
+    let url = req.body.full_name + SPLIT_KEY + req.body.email + SPLIT_KEY + req.body.password; 
 
     jwt.sign({ url: url }, PRIVATE_KEY, async (err, token) => {
         if (err) {
@@ -96,7 +98,9 @@ exports.register = async (req,res) => {
         if (err) jwtErr = 1;
             
         else {
-            let url = decoded.url.split(" / ");
+            let url = decoded.url.split(SPLIT_KEY);
+            if(url.length != 3) return jwtErr = 1;
+
             full_name = url[0];
             email = url[1];
             password = url[2];

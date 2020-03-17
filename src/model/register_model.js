@@ -1,7 +1,6 @@
-const conn = require('../config/db');
-
 
 function registerUser(full_name, email, hash){
+    const conn = require('../config/db');
     
     return new Promise(resolve => {
         let query = "INSERT INTO user (email, full_name, password) VALUES (?,?,?)";
@@ -12,11 +11,13 @@ function registerUser(full_name, email, hash){
                 
                 resolve(insertErr);
             });
-    
+
     });
 }
 
+
 function isThereUser(email){
+    const conn = require('../config/db');
     
     return new Promise(resolve => {
         let query = "SELECT * FROM user WHERE email = ?";
@@ -30,7 +31,7 @@ function isThereUser(email){
                     results: results
                 });
             });
-    
+
     });
 }
 
