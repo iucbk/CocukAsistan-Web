@@ -7,13 +7,14 @@ const resFun = require("../utils/response_functions");
 
 const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
 const SPLIT_KEY = "£z2H`)3FjvXJ(V£/8q!uAV.>l//dn6(";
+const MAIL_KEY = "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";
 
 // Sending Verification Mail
 
 function sendMail(req, token){
     return new Promise(resolve => {
         
-        sgMail.setApiKey('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');
+        sgMail.setApiKey(MAIL_KEY);
 
         const msg = {
             to: req.body.email,
@@ -98,6 +99,8 @@ exports.register = async (req,res) => {
             
         else {
             let url = decoded.url.split(SPLIT_KEY);
+            if(url.length != 3) return jwtErr = 1;
+
             full_name = url[0];
             email = url[1];
             password = url[2];
