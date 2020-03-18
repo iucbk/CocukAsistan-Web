@@ -1,5 +1,3 @@
-const mysql = require('mysql');
-
 const config =
 {
     host: 'cocukasistan.mysql.database.azure.com',
@@ -8,8 +6,5 @@ const config =
     database: 'cocukasistan',
     port: 3306
 };
-
-const conn = new mysql.createConnection(config);
-
-
-module.exports = conn;
+  
+module.exports = config;
