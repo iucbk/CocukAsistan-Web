@@ -5,6 +5,7 @@ const updatePasswordController = require('../controller/updatePassword_cont');
 const quizCategories = require('../controller/quiz_categories_cont');
 const quizById = require("../controller/quiz_by_id_cont");
 const objectById = require('../controller/object_by_id_cont');
+const quizesByCategory = require('../controller/quizes_by_category_cont');
 
 
 router.get("/favicon.ico", (req, res) => res.status(204).json({}));
@@ -22,6 +23,7 @@ router.get("/quiz/getCategories", quizCategories.quizCategories);
 
 router.get("/quiz/getById", quizById.quizById);
 
+router.get("/quiz/getByCategory", quizesByCategory.quizesByCategory);
 
 // object router
 router.get('/object/getById', objectById.objectById);
