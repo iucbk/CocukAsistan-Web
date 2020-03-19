@@ -26,12 +26,5 @@ router.get("/quiz/getByCategory", quiz_cont.quizesByCategory);
 // object router
 router.get("/object/getById", objectById.objectById);
 
-router.get("/newquiz", (req, res) => {
-  // code
-});
-
-router.get("/finishedquizzes", (req, res) => {
-  // code
-});
 
 module.exports = router;

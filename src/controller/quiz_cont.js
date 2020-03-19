@@ -3,14 +3,24 @@ const resFun = require("../utils/response_functions");
 
 exports.quizById = async (req, res) => {
   let quiz = await quiz_model.getQuizById(req.query.quiz_id);
-  res.status(200).json(resFun.success(200, "Quiz fetched successfully", quiz));
+
+  if (quiz.db_error) {
+    res.status(503).json(resFun.fail(503, "Database error"));
+    return;
+  }
+
+  res.status(200).json(resFun.success(200, "Quiz fetched successfully", quiz.results));
 };
 
 exports.quizCategories = async (req, res) => {
   let categories = await quiz_model.getQuizCategories();
-  res
-    .status(200)
-    .json(resFun.success(200, "Categories fetched successfully", categories));
+
+  if (categories.db_error) {
+    res.status(503).json(resFun.fail(503, "Database error"));
+    return;
+  }
+
+  res.status(200).json(resFun.success(200, "Categories fetched successfully", categories.results));
 };
 
 exports.quizesByCategory = async (req, res) => {
@@ -18,11 +28,11 @@ exports.quizesByCategory = async (req, res) => {
     req.body.decoded_id,
     req.query.category_id
   );
-  if (data.dbError) {
+  if (data.db_error) {
     res.status(503).json(resFun.fail(503, "Database error"));
     return;
   }
   res
     .status(200)
-    .json(resFun.success(200, "Quizes fetched successfully", data.quizes));
+    .json(resFun.success(200, "Quizes fetched successfully", data.results));
 };
