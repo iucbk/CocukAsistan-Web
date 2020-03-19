@@ -1,8 +1,9 @@
 const mysql = require('mysql');
+const config = require('../config/db');
+
 
 function getQuizById(id) {
   return new Promise(resolve => {
-    const config = require('../config/db');
     const conn = new mysql.createConnection(config);
 
     let query =
@@ -18,4 +19,23 @@ function getQuizById(id) {
   });
 }
 
-module.exports = getQuizById;
+function getQuizCategories() {
+  return new Promise(resolve => {
+    const conn = new mysql.createConnection(config);
+
+    let query =
+      "SELECT quiz_category_id AS id, quiz_category_name AS name FROM cocukasistan.quizcategory;";
+    conn.query(query, (err, results, fields) => {
+      if (err) throw err;
+
+      conn.end((err)=>{
+        if(err) throw err;
+        resolve(results);
+      });
+    });
+  });
+}
+
+
+exports.getQuizById = getQuizById;
+exports.getQuizCategories = getQuizCategories;

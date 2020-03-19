@@ -2,8 +2,7 @@ const router = require('express').Router();
 const loginController = require('../controller/login_cont');
 const registerController = require('../controller/register_cont');
 const updatePasswordController = require('../controller/updatePassword_cont');
-const quizCategories = require('../controller/quiz_categories_cont');
-const quizById = require("../controller/quiz_by_id_cont");
+const quiz_cont = require('../controller/quiz_cont');
 const objectById = require('../controller/object_by_id_cont');
 
 
@@ -18,9 +17,9 @@ router.post("/user/login", loginController.login);
 router.post("/user/updatePassword", updatePasswordController.update);
 
 // quiz router
-router.get("/quiz/getCategories", quizCategories.quizCategories);
+router.get("/quiz/getById", quiz_cont.quizById);
 
-router.get("/quiz/getById", quizById.quizById);
+router.get("/quiz/getCategories", quiz_cont.quizCategories);
 
 
 // object router
