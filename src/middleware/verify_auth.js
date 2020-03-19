@@ -6,18 +6,18 @@ PUBLIC_ROUTES = ["/user/login", "/user/signup", "/user/verify"];
 PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY";
 
 function verifyAuth(req, res, next) {
-    if (PUBLIC_ROUTES.includes(req.path)) {
+  if (PUBLIC_ROUTES.includes(req.path)) {
+    next();
+  } else {
+    jwt.verify(req.headers.token, PRIVATE_KEY, function(err, decoded) {
+      if (err) {
+        res.status(422).json(resFun.fail(422, "Invalid token"));
+      } else {
+        req.body.decoded_id = decoded.id;
         next();
-    } else {
-        jwt.verify(req.headers.token, PRIVATE_KEY, function (err, decoded) {
-            if (err) {
-                res.status(422).json(resFun.fail(422, "Invalid token"));
-            } else {
-                req.body.decoded_id = decoded.id;
-                next();
-            }
-        })
-    }
-};
+      }
+    });
+  }
+}
 
 module.exports = verifyAuth;

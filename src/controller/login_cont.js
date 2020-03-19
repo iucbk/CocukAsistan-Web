@@ -1,61 +1,65 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const loginModel = require("../model/login_model");
 const resFun = require("../utils/response_functions");
 
-function comparePassword(password, hash){
-    return new Promise(resolve => {
+function comparePassword(password, hash) {
+  return new Promise(resolve => {
+    bcrypt.compare(password, hash, (err, res) => {
+      if (err) {
+        resolve({
+          compare_error: 1
+        });
+      }
 
-        bcrypt.compare(password, hash, (err, res) => {
-            if(err){
-                resolve({
-                    compare_error: 1
-                });
-            }
-
-            if(res) {
-                resolve({
-                    is_compare: 1
-                });
-            } 
-            else {
-                resolve({
-                    is_compare: 0
-                });
-            } 
-            
-          });
+      if (res) {
+        resolve({
+          is_compare: 1
+        });
+      } else {
+        resolve({
+          is_compare: 0
+        });
+      }
     });
+  });
 }
-
 
 PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY";
 
 exports.login = async (req, res) => {
-    let data = await loginModel(req.body);
+  let data = await loginModel(req.body);
 
-    if(data.db_error){
-        res.status(503).json(resFun.fail(503, "Database error"));
-        return;
-    }
-    
-    if (data.length == 1) {
-        let compare = await comparePassword(req.body.password, data[0].password);
+  if (data.db_error) {
+    res.status(503).json(resFun.fail(503, "Database error"));
+    return;
+  }
 
-        jwt.sign({ id: data[0].user_id }, PRIVATE_KEY, (err, token) => {
-            if (err) {
-                res.status(500).json(resFun.fail(500, "An error occured while creating token"))
-            };
+  if (data.length == 1) {
+    let compare = await comparePassword(req.body.password, data[0].password);
 
-            if(compare.compare_error) 
-                res.status(500).json(resFun.fail(500, "An error occured while comparing password"));
+    jwt.sign({ id: data[0].user_id }, PRIVATE_KEY, (err, token) => {
+      if (err) {
+        res
+          .status(500)
+          .json(resFun.fail(500, "An error occured while creating token"));
+      }
 
-            if(compare.is_compare)
-                res.status(200).json(resFun.success(200, "Logged in successfully", { token: token }));
-            else
-                res.status(422).json(resFun.fail(422, "Incorrect email or password"));
-        });
-    } else {
+      if (compare.compare_error)
+        res
+          .status(500)
+          .json(resFun.fail(500, "An error occured while comparing password"));
+
+      if (compare.is_compare)
+        res
+          .status(200)
+          .json(
+            resFun.success(200, "Logged in successfully", { token: token })
+          );
+      else
         res.status(422).json(resFun.fail(422, "Incorrect email or password"));
-    }
+    });
+  } else {
+    res.status(422).json(resFun.fail(422, "Incorrect email or password"));
+  }
 };
