@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const config = require("../config/db");
 
+
 function getQuizById(id) {
   return new Promise(resolve => {
     const conn = new mysql.createConnection(config);
@@ -10,13 +11,17 @@ function getQuizById(id) {
       INNER JOIN cocukasistan.question ON quiz.quiz_id = question.quiz_id 
       WHERE quiz.quiz_id = ?;`;
     conn.query(query, [id], (err, results, fields) => {
-      if (err) throw err;
+      let db_error = 0;
 
-      conn.end(err => {
-        if (err) throw err;
-        resolve(results);
+      if (err) db_error = 1;
+
+      conn.end((err) => {
+        if (err) db_error = 1;
+
+        resolve({ db_error: db_error, results: results });
       });
     });
+
   });
 }
 
@@ -27,11 +32,14 @@ function getQuizCategories() {
     let query =
       "SELECT quiz_category_id AS id, quiz_category_name AS name FROM cocukasistan.quizcategory;";
     conn.query(query, (err, results, fields) => {
-      if (err) throw err;
+      let db_error = 0;
 
-      conn.end(err => {
-        if (err) throw err;
-        resolve(results);
+      if (err) db_error = 1;
+
+      conn.end((err) => {
+        if (err) db_error = 1;
+
+        resolve({ db_error: db_error, results: results });
       });
     });
   });
@@ -46,18 +54,19 @@ function getQuizesByCategory(user_id, category_id) {
         AND solvedquiz.user_id = ?
         WHERE quiz.category_id = ?`;
     conn.query(query, [user_id, category_id], (err, results, fields) => {
-      let dbError = false;
-      if (err) dbErr = true;
+      let db_error = 0;
 
-      conn.end(err => {
-        resolve({
-          dbError: dbError,
-          quizes: results
-        });
+      if (err) db_error = 1;
+
+      conn.end((err) => {
+        if (err) db_error = 1;
+
+        resolve({ db_error: db_error, results: results });
       });
     });
   });
 }
+
 
 exports.getQuizesByCategory = getQuizesByCategory;
 exports.getQuizById = getQuizById;

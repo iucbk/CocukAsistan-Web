@@ -1,10 +1,11 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const loginModel = require("../model/login_model");
 const resFun = require("../utils/response_functions");
 
 function comparePassword(password, hash) {
   return new Promise(resolve => {
+
     bcrypt.compare(password, hash, (err, res) => {
       if (err) {
         resolve({
@@ -16,14 +17,17 @@ function comparePassword(password, hash) {
         resolve({
           is_compare: 1
         });
-      } else {
+      }
+      else {
         resolve({
           is_compare: 0
         });
       }
+
     });
   });
 }
+
 
 PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY";
 
@@ -35,27 +39,21 @@ exports.login = async (req, res) => {
     return;
   }
 
-  if (data.length == 1) {
-    let compare = await comparePassword(req.body.password, data[0].password);
+  let result = data.results;
 
-    jwt.sign({ id: data[0].user_id }, PRIVATE_KEY, (err, token) => {
+  if (result.length == 1) {
+    let compare = await comparePassword(req.body.password, result[0].password);
+
+    jwt.sign({ id: result[0].user_id }, PRIVATE_KEY, (err, token) => {
       if (err) {
-        res
-          .status(500)
-          .json(resFun.fail(500, "An error occured while creating token"));
-      }
+        res.status(500).json(resFun.fail(500, "An error occured while creating token"))
+      };
 
       if (compare.compare_error)
-        res
-          .status(500)
-          .json(resFun.fail(500, "An error occured while comparing password"));
+        res.status(500).json(resFun.fail(500, "An error occured while comparing password"));
 
       if (compare.is_compare)
-        res
-          .status(200)
-          .json(
-            resFun.success(200, "Logged in successfully", { token: token })
-          );
+        res.status(200).json(resFun.success(200, "Logged in successfully", { token: token }));
       else
         res.status(422).json(resFun.fail(422, "Incorrect email or password"));
     });
