@@ -1,6 +1,9 @@
+const mysql = require('mysql');
 
 function login(body) {
   return new Promise(resolve => {
+    const config = require('../config/db');
+    const conn = new mysql.createConnection(config);
 
     let query = "SELECT * FROM cocukasistan.user WHERE email = ?";
 
@@ -11,7 +14,11 @@ function login(body) {
           db_error: 1
         });
       }
-      resolve(results);
+
+      conn.end((err)=>{
+        if(err) throw err;
+        resolve(results);
+      });
     });
 
   });
