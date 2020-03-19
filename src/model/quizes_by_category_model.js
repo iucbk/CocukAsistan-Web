@@ -10,10 +10,14 @@ function getQuizesByCategory(user_id, category_id) {
         AND solvedquiz.user_id = ?
         WHERE quiz.category_id = ?`;
     conn.query(query, [user_id, category_id], (err, results, fields) => {
-      if (err) throw err;
+      let dbError = false;
+      if (err) dbErr = true;
+
       conn.end(err => {
-        if (err) throw err;
-        resolve(results);
+        resolve({
+          dbError: dbError,
+          quizes: results
+        });
       });
     });
   });
