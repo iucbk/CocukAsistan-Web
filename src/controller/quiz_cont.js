@@ -16,8 +16,8 @@ exports.quizById = async (req, res) => {
 exports.quizCategories = async (req, res) => {
   let categories = await quiz_model.getCategories();
   let byId = await quiz_model.getCategoriesById(req.body.decoded_id);
-  
-  if (categories.db_error) {
+
+  if (categories.db_error || byId.db_error) {
     res.status(503).json(resFun.fail(503, "Database error"));
     return;
   }
