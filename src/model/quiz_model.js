@@ -25,13 +25,37 @@ function getQuizById(id) {
   });
 }
 
-function getQuizCategories() {
+
+function getCategories() {
   return new Promise(resolve => {
     const conn = new mysql.createConnection(config);
 
-    let query =
-      "SELECT quiz_category_id AS id, quiz_category_name AS name FROM cocukasistan.quizcategory;";
-    conn.query(query, (err, results, fields) => {
+    let query = `SELECT quiz.quiz_id, quizcategory.quiz_category_id AS category_id, quizcategory.quiz_category_name AS category_name 
+        FROM quizcategory
+        INNER JOIN quiz ON quizcategory.quiz_category_id = quiz.category_id`;
+    conn.query(query, (err, results) => {
+      let db_error = 0;
+
+      if (err) db_error = 1;
+
+      conn.end((err) => {
+        if (err) db_error = 1;
+
+        resolve({ db_error: db_error, results: results });
+      });
+    });
+  });
+}
+
+
+function getCategoriesById(user_id) {
+  return new Promise(resolve => {
+    const conn = new mysql.createConnection(config);
+
+    let query = `SELECT quiz.quiz_id, quiz.category_id, solvedquiz.user_id FROM quiz
+        LEFT JOIN solvedquiz ON quiz.quiz_id = solvedquiz.quiz_id
+        WHERE solvedquiz.user_id = ?`;
+    conn.query(query, [user_id], (err, results) => {
       let db_error = 0;
 
       if (err) db_error = 1;
@@ -70,4 +94,5 @@ function getQuizesByCategory(user_id, category_id) {
 
 exports.getQuizesByCategory = getQuizesByCategory;
 exports.getQuizById = getQuizById;
-exports.getQuizCategories = getQuizCategories;
+exports.getCategories = getCategories;
+exports.getCategoriesById = getCategoriesById;
