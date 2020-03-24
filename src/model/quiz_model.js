@@ -92,7 +92,28 @@ function getQuizesByCategory(user_id, category_id) {
 }
 
 
+function solvedQuiz(user_id, quiz_id, quiz_score) {
+  return new Promise(resolve => {
+    const conn = new mysql.createConnection(config);
+    let query = `INSERT INTO solvedquiz (user_id, quiz_id, quiz_score) VALUES (?, ?, ?)`;
+
+    conn.query(query, [user_id, quiz_id, quiz_score], (err) => {
+      let db_error = 0;
+
+      if (err) db_error = 1;
+
+      conn.end((err) => {
+        if (err) db_error = 1;
+
+        resolve(db_error);
+      });
+    });
+  });
+}
+
+
 exports.getQuizesByCategory = getQuizesByCategory;
 exports.getQuizById = getQuizById;
 exports.getCategories = getCategories;
 exports.getCategoriesById = getCategoriesById;
+exports.solvedQuiz = solvedQuiz;
