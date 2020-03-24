@@ -12,16 +12,48 @@ exports.quizById = async (req, res) => {
   res.status(200).json(resFun.success(200, "Quiz fetched successfully", quiz.results));
 };
 
-exports.quizCategories = async (req, res) => {
-  let categories = await quiz_model.getQuizCategories();
 
+exports.quizCategories = async (req, res) => {
+  let categories = await quiz_model.getCategories();
+  let byId = await quiz_model.getCategoriesById(req.body.decoded_id);
+  
   if (categories.db_error) {
     res.status(503).json(resFun.fail(503, "Database error"));
     return;
   }
 
-  res.status(200).json(resFun.success(200, "Categories fetched successfully", categories.results));
+
+  let catResult = [];
+  for (let each of categories.results) {
+
+    if (catResult[each.category_id - 1])
+      catResult[each.category_id - 1].push({ id: each.category_id, name: each.category_name })
+    else
+      catResult[each.category_id - 1] = [{ id: each.category_id, name: each.category_name }];
+  }
+
+  let idResult = [];
+  for (let each of byId.results) {
+
+    if (idResult[each.category_id - 1])
+      idResult[each.category_id - 1] += 1;
+    else
+      idResult[each.category_id - 1] = 1;
+  }
+
+  let dataResult = []
+  for (let i = 0; i < catResult.length; i++) {
+
+    if (catResult[i].length == idResult[i])
+      dataResult.push({ id: catResult[i][0].id, name: catResult[i][0].name, isAllSolved: 1 });
+    else
+      dataResult.push({ id: catResult[i][0].id, name: catResult[i][0].name, isAllSolved: 0 });
+
+  }
+
+  res.status(200).json(resFun.success(200, "Categories fetched successfully", dataResult));
 };
+
 
 exports.quizesByCategory = async (req, res) => {
   let data = await quiz_model.getQuizesByCategory(
