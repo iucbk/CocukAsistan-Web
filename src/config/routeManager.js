@@ -9,19 +9,15 @@ router.get("/favicon.ico", (req, res) => res.status(204).json({}));
 
 // user router
 router.post("/user/signup", registerController.mail);
-
 router.get("/user/verify", registerController.register);
-
 router.post("/user/login", loginController.login);
-
 router.post("/user/updatePassword", updatePasswordController.update);
 
 // quiz router
 router.get("/quiz/getById", quiz_cont.quizById);
-
 router.get("/quiz/getCategories", quiz_cont.quizCategories);
-
 router.get("/quiz/getByCategory", quiz_cont.quizesByCategory);
+router.post("/quiz/solvedQuiz", quiz_cont.solvedQuiz);
 
 // object router
 router.get("/object/getById", objectById.objectById);

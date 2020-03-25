@@ -68,3 +68,19 @@ exports.quizesByCategory = async (req, res) => {
     .status(200)
     .json(resFun.success(200, "Quizes fetched successfully", data.results));
 };
+
+
+exports.solvedQuiz = async (req, res) => {
+  let insert_err = await quiz_model.solvedQuiz(
+    req.body.decoded_id,
+    req.body.quiz_id,
+    req.body.quiz_score
+  );
+
+  if (insert_err) {
+    res.status(503).json(resFun.fail(503, "Database error"));
+    return;
+  }
+
+  res.status(200).json(resFun.success(200, "Quiz sent successfully", null));
+};
