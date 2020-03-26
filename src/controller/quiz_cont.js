@@ -71,13 +71,16 @@ exports.quizesByCategory = async (req, res) => {
 
 
 exports.solvedQuiz = async (req, res) => {
-  let insert_err = await quiz_model.solvedQuiz(
-    req.body.decoded_id,
-    req.body.quiz_id,
-    req.body.quiz_score
-  );
-
-  if (insert_err) {
+  let select = await quiz_model.isThereSolvedQuiz(req.body.decoded_id, req.body.quiz_id)
+  
+  if (select.err) {
+    res.status(503).json(resFun.fail(503, "Database error"));
+    return;
+  }
+  
+  let insert_update_err = await quiz_model.solvedQuiz(select.result, req.body.decoded_id, req.body.quiz_id, req.body.quiz_score);
+  
+  if (insert_update_err) {
     res.status(503).json(resFun.fail(503, "Database error"));
     return;
   }
