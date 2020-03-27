@@ -92,12 +92,22 @@ function getQuizesByCategory(user_id, category_id) {
 }
 
 
-function solvedQuiz(user_id, quiz_id, quiz_score) {
+function solvedQuiz(data, user_id, quiz_id, quiz_score) {
   return new Promise(resolve => {
     const conn = new mysql.createConnection(config);
-    let query = `INSERT INTO solvedquiz (user_id, quiz_id, quiz_score) VALUES (?, ?, ?)`;
+    let query = "";
+    let query_values;
 
-    conn.query(query, [user_id, quiz_id, quiz_score], (err) => {
+    if (data.length == 1) {
+      query = "UPDATE solvedquiz SET user_id = ?, quiz_id = ?, quiz_score = ? WHERE user_id = ? AND quiz_id = ?";
+      query_values = [user_id, quiz_id, quiz_score, user_id, quiz_id];
+    }
+    if (data.length == 0) {
+      query = "INSERT INTO solvedquiz (user_id, quiz_id, quiz_score) VALUES (?, ?, ?)";
+      query_values = [user_id, quiz_id, quiz_score];
+    }
+
+    conn.query(query, query_values, (err) => {
       let db_error = 0;
 
       if (err) db_error = 1;
@@ -111,9 +121,34 @@ function solvedQuiz(user_id, quiz_id, quiz_score) {
   });
 }
 
+function isThereSolvedQuiz(user_id, quiz_id) {
+  return new Promise(resolve => {
+    const conn = new mysql.createConnection(config);
+    let query = "SELECT * FROM solvedquiz WHERE user_id = ? AND quiz_id = ?";
+
+    conn.query(query, [user_id, quiz_id], (err, result) => {
+      let db_error = 0;
+
+      if (err) db_error = 1;
+
+      conn.end((err) => {
+        if (err) db_error = 1;
+
+        resolve({
+          result: result,
+          err: db_error
+        });
+      });
+
+    });
+
+  });
+}
+
 
 exports.getQuizesByCategory = getQuizesByCategory;
 exports.getQuizById = getQuizById;
 exports.getCategories = getCategories;
 exports.getCategoriesById = getCategoriesById;
 exports.solvedQuiz = solvedQuiz;
+exports.isThereSolvedQuiz = isThereSolvedQuiz;
