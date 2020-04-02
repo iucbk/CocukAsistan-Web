@@ -9,8 +9,7 @@ exports.Info = async (req, res) => {
 
     let result = {
         full_name: data[0],
-        email: data[1],
-        password: data[2]
+        email: data[1]
     }
 
     res.json(resFun.success(200, "Success", result));
