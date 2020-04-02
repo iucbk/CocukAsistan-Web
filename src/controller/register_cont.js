@@ -5,7 +5,7 @@ const registerModel = require('../model/register_model');
 const resFun = require("../utils/response_functions");
 
 
-const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY_SEND&MAIL";
+const PRIVATE_KEY = "COCUK_ASISTAN_2020_PRIVATE_KEY";
 const SPLIT_KEY = "£z2H`)3FjvXJ(V£/8q!uAV.>l//dn6(";
 const MAIL_KEY = "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";
 
@@ -52,7 +52,7 @@ exports.mail = async (req, res) => {
     // Sending mail
     let url = req.body.full_name + SPLIT_KEY + req.body.email + SPLIT_KEY + req.body.password;
 
-    jwt.sign({ url: url }, PRIVATE_KEY, async (err, token) => {
+    jwt.sign({ id: url }, PRIVATE_KEY, async (err, token) => {
         if (err) {
             res.status(500).json(resFun.fail(500, "An error occured while creating token"));
         }
@@ -98,7 +98,7 @@ exports.register = async (req, res) => {
         if (err) jwtErr = 1;
 
         else {
-            let url = decoded.url.split(SPLIT_KEY);
+            let url = decoded.id.split(SPLIT_KEY);
             if (url.length != 3) return jwtErr = 1;
 
             full_name = url[0];
