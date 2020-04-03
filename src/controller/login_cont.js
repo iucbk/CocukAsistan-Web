@@ -39,12 +39,12 @@ exports.login = async (req, res) => {
     return;
   }
 
-  let result = data.results;
+  let result = data.results[0];
 
-  if (result.length == 1) {
-    let compare = await comparePassword(req.body.password, result[0].password);
+  if (result) {
+    let compare = await comparePassword(req.body.password, result.password);
 
-    jwt.sign({ id: result[0].user_id }, PRIVATE_KEY, (err, token) => {
+    jwt.sign({ id: result.user_id }, PRIVATE_KEY, (err, token) => {
       if (err) {
         res.status(500).json(resFun.fail(500, "An error occured while creating token"))
       };
@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
         res.status(500).json(resFun.fail(500, "An error occured while comparing password"));
 
       if (compare.is_compare)
-        res.status(200).json(resFun.success(200, "Logged in successfully", { token: token }));
+        res.status(200).json(resFun.success(200, "Logged in successfully", { email: result.email, full_name: result.full_name, token: token }));
       else
         res.status(422).json(resFun.fail(422, "Incorrect email or password"));
     });
