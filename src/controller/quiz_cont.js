@@ -25,7 +25,7 @@ exports.quizById = async (req, res) => {
     data.push(add);
   });
 
-  res.status(200).json(resFun.success(200, "Quiz fetched successfully", data[0]));
+  res.status(200).json(resFun.success(200, "Quiz fetched successfully", data));
 };
 
 
