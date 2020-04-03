@@ -9,7 +9,23 @@ exports.quizById = async (req, res) => {
     return;
   }
 
-  res.status(200).json(resFun.success(200, "Quiz fetched successfully", quiz.results));
+  let data = [];
+
+  quiz.results.forEach(element => {
+    let add = {
+      quiz_id: element.quiz_id,
+      quiz_title: element.quiz_title,
+      questions: {
+        question_content: element.question_content,
+        true_option: element.true_option,
+        options: element.options.split("\\n")
+      }
+    }
+    
+    data.push(add);
+  });
+
+  res.status(200).json(resFun.success(200, "Quiz fetched successfully", data[0]));
 };
 
 

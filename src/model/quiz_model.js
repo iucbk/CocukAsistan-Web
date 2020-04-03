@@ -7,10 +7,10 @@ function getQuizById(id) {
     const conn = new mysql.createConnection(config);
 
     let query = `SELECT quiz.quiz_id, quiz_title, question_content, options, true_option 
-      FROM cocukasistan.quiz 
-      INNER JOIN cocukasistan.question ON quiz.quiz_id = question.quiz_id 
+      FROM quiz 
+      INNER JOIN question ON quiz.quiz_id = question.quiz_id 
       WHERE quiz.quiz_id = ?;`;
-    conn.query(query, [id], (err, results, fields) => {
+    conn.query(query, [id], (err, results) => {
       let db_error = 0;
 
       if (err) db_error = 1;
