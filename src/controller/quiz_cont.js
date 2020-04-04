@@ -9,7 +9,32 @@ exports.quizById = async (req, res) => {
     return;
   }
 
-  res.status(200).json(resFun.success(200, "Quiz fetched successfully", quiz.results));
+  let data = {
+    quiz_id: null,
+    quiz_title: null,
+    questions: []
+  };
+  let i = 0;
+
+  quiz.results.forEach(element => {
+
+    data.quiz_id = element.quiz_id;
+    data.quiz_title = element.quiz_title;
+
+    data.questions.push({
+      question_content: element.question_content,
+      true_option: element.true_option,
+      options: element.options.split("\\n")
+    });
+  });
+
+  if (data.quiz_id) {
+    res.status(200).json(resFun.success(200, "Quiz fetched successfully", data));
+  }
+  else {
+    res.status(404).json(resFun.fail(404, "Quiz not found"));
+  }
+
 };
 
 
@@ -72,14 +97,14 @@ exports.quizesByCategory = async (req, res) => {
 
 exports.solvedQuiz = async (req, res) => {
   let select = await quiz_model.isThereSolvedQuiz(req.body.decoded_id, req.body.quiz_id)
-  
+
   if (select.err) {
     res.status(503).json(resFun.fail(503, "Database error"));
     return;
   }
-  
+
   let insert_update_err = await quiz_model.solvedQuiz(select.result, req.body.decoded_id, req.body.quiz_id, req.body.quiz_score);
-  
+
   if (insert_update_err) {
     res.status(503).json(resFun.fail(503, "Database error"));
     return;
