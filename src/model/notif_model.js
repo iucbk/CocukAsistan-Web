@@ -11,26 +11,26 @@ exports.seenTips = (user_id) => {
 
         let insQuery = `INSERT INTO seentip (user_id, tip_id) VALUES (?, ?)`;
 
-        conn.query(selQuery, [user_id], (err, results) => {
-            if (err) {
-                resolve({err: err });
-                return;
+        conn.query(selQuery, [user_id], (err1, results) => {
+            if (err1 || results.length == 0) {
+                conn.end(err2 => {
+                    
+                    resolve({ results: null, err: err1 || err2 });
+                })
             }
-            if(results.length == 0){
-                resolve({results: null, err: 0 });
-                return;
+            else {
+                conn.query(insQuery, [user_id, results[0].tip_id], (err) => {
+                    let db_err = 0;
+                    if (err) db_err = 1;
+
+                    conn.end(err => {
+                        if (err) db_err = 1;
+
+                        resolve({ results: results[0].tip_content, err: db_err });
+                    })
+                })
             }
 
-            conn.query(insQuery, [user_id, results[0].tip_id], (err) => {
-                let db_err = 0;
-                if (err) db_err = 1;
-                
-                conn.end(err => {
-                    if (err) db_err = 1;
-    
-                    resolve({ results: results[0].tip_content, err: db_err });
-                })
-            })
         })
     })
 }
