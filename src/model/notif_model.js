@@ -2,42 +2,34 @@ const mysql = require('mysql');
 const config = require('../config/db');
 
 
-exports.getUnSeenTips = (user_id) => {
+exports.seenTips = (user_id) => {
     return new Promise(resolve => {
 
         const conn = new mysql.createConnection(config);
-        let query = `SELECT * FROM tip WHERE tip_id NOT IN 
-        (SELECT tip_id FROM seentip WHERE user_id = ?) `;
+        let selQuery = `SELECT * FROM tip WHERE tip_id NOT IN 
+            (SELECT tip_id FROM seentip WHERE user_id = ?) LIMIT 1`;
 
-        conn.query(query, [user_id], (err, results) => {
-            let db_err = 0;
+        let insQuery = `INSERT INTO seentip (user_id, tip_id) VALUES (?, ?)`;
 
-            if (err) db_err = 1;
+        conn.query(selQuery, [user_id], (err, results) => {
+            if (err) {
+                resolve({err: err });
+                return;
+            }
+            if(results.length == 0){
+                resolve({results: null, err: 0 });
+                return;
+            }
 
-            conn.end(err => {
+            conn.query(insQuery, [user_id, results[0].tip_id], (err) => {
+                let db_err = 0;
                 if (err) db_err = 1;
-
-                resolve({ results: results, err: db_err });
-            })
-        })
-    })
-}
-
-exports.insertSeenTip = (user_id, tip_id) => {
-    return new Promise(resolve => {
-
-        const conn = new mysql.createConnection(config);
-        let query = "INSERT seentip (user_id, tip_id) VALUES (?, ?)";
-
-        conn.query(query, [user_id, tip_id], (err, results) => {
-            let db_err = 0;
-
-            if (err) db_err = 1;
-
-            conn.end(err => {
-                if (err) db_err = 1;
-
-                resolve(db_err);
+                
+                conn.end(err => {
+                    if (err) db_err = 1;
+    
+                    resolve({ results: results[0].tip_content, err: db_err });
+                })
             })
         })
     })
