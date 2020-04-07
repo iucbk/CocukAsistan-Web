@@ -19,14 +19,10 @@ exports.seenTips = (user_id) => {
                 })
             }
             else {
-                conn.query(insQuery, [user_id, results[0].tip_id], (err) => {
-                    let db_err = 0;
-                    if (err) db_err = 1;
-
-                    conn.end(err => {
-                        if (err) db_err = 1;
-
-                        resolve({ results: results[0].tip_content, err: db_err });
+                conn.query(insQuery, [user_id, results[0].tip_id], (err1) => {
+                    conn.end(err2 => {
+                        
+                        resolve({ results: results[0].tip_content, err: err1 || err2 });
                     })
                 })
             }
