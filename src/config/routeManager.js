@@ -5,6 +5,7 @@ const updatePasswordController = require("../controller/updatePassword_cont");
 const quiz_cont = require("../controller/quiz_cont");
 const objectById = require("../controller/object_by_id_cont");
 const getInfo = require("../controller/getInfo_cont");
+const notif_cont = require("../controller/notif_cont");
 
 
 router.get("/favicon.ico", (req, res) => res.status(204).json({}));
@@ -24,6 +25,9 @@ router.post("/quiz/solvedQuiz", quiz_cont.solvedQuiz);
 
 // object router
 router.get("/object/getById", objectById.objectById);
+
+// notification router
+router.post("/notification/getTip", notif_cont.tip);
 
 
 module.exports = router;
