@@ -1,7 +1,7 @@
 const config = {
-  host: "cocukasistan.mysql.database.azure.com",
-  user: "iucbk@cocukasistan",
-  password: "CocukAsistan@2020",
+  host: "cocuk-asistan.mysql.database.azure.com",
+  user: "miracozkan@cocuk-asistan",
+  password: "13579mO$",
   database: "cocukasistan",
   port: 3306
 };
